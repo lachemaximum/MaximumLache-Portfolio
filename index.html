@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YUTO MATSUO | 松尾雄斗 Official Site — AI Developer / Creator</title>
+<meta name="description" content="M&Y 松尾雄斗のオフィシャルサイト。AI自動化システム開発、コンテンツ制作パイプライン、動画編集。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070B12;
+  --bg2:#0B1220;
+  --line:rgba(96,165,250,.14);
+  --grid:rgba(96,165,250,.06);
+  --text:#E6EDF6;
+  --muted:#8A97A8;
+  --accent:#5EEAD4;
+  --accent2:#60A5FA;
+  --mono:'JetBrains Mono',monospace;
+  --disp:'Space Grotesk','Noto Sans JP',sans-serif;
+  --body:'Noto Sans JP',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-weight:300;
+  line-height:1.9;
+  overflow-x:hidden;
+}
+/* ===== tech background ===== */
+.bg-grid{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 40%,transparent 100%);
+}
+.bg-glow{
+  position:fixed;z-index:-1;pointer-events:none;
+  width:60vw;height:60vw;border-radius:50%;
+  filter:blur(120px);opacity:.14;
+}
+.bg-glow.a{top:-20vw;right:-15vw;background:var(--accent2)}
+.bg-glow.b{bottom:-25vw;left:-20vw;background:var(--accent)}
+canvas#net{position:fixed;inset:0;z-index:-1;opacity:.5}
+
+/* ===== nav ===== */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 40px;
+  background:linear-gradient(to bottom,rgba(7,11,18,.9),rgba(7,11,18,0));
+  backdrop-filter:blur(4px);
+}
+nav .logo{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:.06em;color:var(--text);text-decoration:none}
+nav .logo span{color:var(--accent)}
+nav ul{display:flex;gap:28px;list-style:none}
+nav a{color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:11px;letter-spacing:.15em;transition:color .25s}
+nav a:hover,nav a:focus-visible{color:var(--accent)}
+nav a:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+@media(max-width:760px){nav ul{display:none}}
+
+/* ===== hero ===== */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 6vw 0;
+  position:relative;
+}
+.hero .role{
+  font-family:var(--mono);font-size:12px;letter-spacing:.35em;
+  color:var(--accent);margin-bottom:28px;
+}
+.hero h1{
+  font-family:var(--disp);
+  font-size:clamp(56px,11vw,150px);
+  line-height:.95;font-weight:700;letter-spacing:-.02em;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .sub{
+  margin-top:32px;max-width:560px;
+  font-size:15px;color:var(--muted);
+}
+.hero .sub strong{color:var(--text);font-weight:500}
+.hero .terminal{
+  margin-top:40px;
+  font-family:var(--mono);font-size:13px;color:var(--accent);
+}
+.hero .terminal::before{content:'$ ';color:var(--muted)}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--accent);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.scroll-hint{
+  position:absolute;bottom:36px;left:6vw;
+  font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--muted);
+  display:flex;align-items:center;gap:12px;
+}
+.scroll-hint::after{content:'';width:48px;height:1px;background:var(--accent);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.2}}
+
+/* ===== marquee ===== */
+.marquee{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  overflow:hidden;white-space:nowrap;
+  padding:14px 0;
+  background:rgba(11,18,32,.6);
+}
+.marquee .track{display:inline-block;animation:scroll 38s linear infinite}
+.marquee span{
+  font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--muted);
+  margin:0 18px;
+}
+.marquee b{color:var(--accent);font-weight:400}
+@keyframes scroll{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){
+  .marquee .track{animation:none}
+  .scroll-hint::after{animation:none}
+  .cursor{animation:none}
+}
+
+/* ===== sections ===== */
+section{padding:110px 6vw;max-width:1200px;margin:0 auto}
+.sec-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--accent);
+  margin-bottom:16px;
+}
+.sec-title{
+  font-family:var(--disp);font-size:clamp(32px,5vw,56px);font-weight:700;
+  letter-spacing:-.01em;line-height:1.1;margin-bottom:12px;
+}
+.sec-sub{color:var(--muted);font-size:14px;margin-bottom:56px}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:start}
+@media(max-width:860px){.about-grid{grid-template-columns:1fr}}
+.about-card{
+  border:1px solid var(--line);border-radius:12px;
+  padding:32px;background:rgba(11,18,32,.5);
+}
+.about-card .name{font-family:var(--disp);font-size:26px;font-weight:700}
+.about-card .name-en{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);margin:6px 0 24px}
+.about-card dl{font-size:13px}
+.about-card dt{color:var(--accent);font-family:var(--mono);font-size:10px;letter-spacing:.2em;margin-top:16px}
+.about-card dd{color:var(--text)}
+.about-text p{margin-bottom:22px;font-size:14.5px;color:#C3CDD9}
+.about-text .highlight{color:var(--accent)}
+
+/* career timeline */
+.timeline{border-left:1px solid var(--line);margin-left:8px}
+.tl-item{position:relative;padding:0 0 48px 40px}
+.tl-item::before{
+  content:'';position:absolute;left:-5px;top:8px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--accent);
+}
+.tl-item .period{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--accent)}
+.tl-item h3{font-size:18px;font-weight:500;margin:8px 0 10px}
+.tl-item .env{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px}
+.tl-item p{font-size:13.5px;color:#B4BFCC}
+
+/* works */
+.works-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.work-card{
+  border:1px solid var(--line);border-radius:12px;
+  padding:30px;background:rgba(11,18,32,.5);
+  transition:border-color .3s,transform .3s;
+  position:relative;overflow:hidden;
+}
+.work-card:hover{border-color:rgba(94,234,212,.45);transform:translateY(-4px)}
+.work-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  opacity:0;transition:opacity .3s;
+}
+.work-card:hover::after{opacity:1}
+.work-card .tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--accent);
+  margin-bottom:14px;
+}
+.work-card h3{font-size:19px;font-weight:500;margin-bottom:12px}
+.work-card p{font-size:13px;color:#B4BFCC;margin-bottom:16px}
+.work-card .stack{display:flex;flex-wrap:wrap;gap:6px}
+.work-card .stack span{
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+  border:1px solid var(--line);border-radius:99px;padding:3px 10px;
+}
+.work-card.wide{grid-column:1/-1}
+.status{
+  display:inline-block;font-family:var(--mono);font-size:10px;
+  color:var(--accent2);border:1px solid rgba(96,165,250,.35);
+  border-radius:99px;padding:2px 10px;margin-left:8px;vertical-align:middle;
+}
+
+/* skills */
+.skill-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px}
+.skill-cols h3{
+  font-family:var(--mono);font-size:11px;letter-spacing:.25em;color:var(--accent);
+  margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+.skill-cols ul{list-style:none;font-size:14px}
+.skill-cols li{padding:7px 0;color:#C3CDD9}
+.skill-cols li::before{content:'▸ ';color:var(--accent2);font-size:11px}
+
+/* contact */
+.contact{text-align:center;padding-bottom:140px}
+.contact .mail{
+  font-family:var(--disp);font-size:clamp(20px,3.5vw,34px);font-weight:500;
+  color:var(--text);text-decoration:none;
+  border-bottom:1px solid var(--accent);padding-bottom:6px;
+  transition:color .3s;
+}
+.contact .mail:hover{color:var(--accent)}
+.contact .note{margin-top:28px;font-size:13px;color:var(--muted)}
+
+footer{
+  border-top:1px solid var(--line);
+  padding:32px 6vw;text-align:center;
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--muted);
+}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow a" aria-hidden="true"></div>
+<div class="bg-glow b" aria-hidden="true"></div>
+<canvas id="net" aria-hidden="true"></canvas>
+
+<nav>
+  <a class="logo" href="#top">M<span>&amp;</span>Y</a>
+  <ul>
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#strengths">STRENGTHS</a></li>
+    <li><a href="#career">CAREER</a></li>
+    <li><a href="#works">WORKS</a></li>
+    <li><a href="#skills">SKILLS</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="top">
+  <p class="role">AI DEVELOPER / AUTOMATION ENGINEER / VIDEO CREATOR</p>
+  <h1>YUTO<br><em>MATSUO</em></h1>
+  <p class="sub">松尾 雄斗 — <strong>まだ誰も解いていない課題を、現代の技術で解く。</strong><br>AI×自動化で、コンテンツ制作と業務システムをつくる。</p>
+  <p class="terminal"><span id="type"></span><span class="cursor"></span></p>
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mq">
+    <span>PYTHON <b>*</b></span><span>AI AUTOMATION <b>*</b></span><span>CLAUDE API <b>*</b></span><span>OPENCV / YOLO <b>*</b></span><span>FASTAPI <b>*</b></span><span>PREMIERE — 6 YEARS <b>*</b></span><span>VOICEVOX <b>*</b></span><span>FFMPEG <b>*</b></span><span>YOUTUBE / TIKTOK PIPELINE <b>*</b></span><span>M&amp;Y <b>*</b></span>
+  </div>
+</div>
+
+<section id="about">
+  <p class="sec-label reveal">01 — PROFILE</p>
+  <h2 class="sec-title reveal">ABOUT</h2>
+  <p class="sec-sub reveal">エンジニア × クリエイター</p>
+  <div class="about-grid">
+    <div class="about-card reveal">
+      <p class="name">松尾 雄斗</p>
+      <p class="name-en">YUTO MATSUO — M&amp;Y</p>
+      <dl>
+        <dt>BASE</dt><dd>福岡県</dd>
+        <dt>BRAND</dt><dd>M&amp;Y — Modern（現代の技術）&amp; Yet（未解決）</dd>
+        <dt>QUALIFICATION</dt><dd>基本情報技術者（2022）</dd>
+        <dt>MUSIC</dt><dd>Ann-Iris（TuneCore配信中）</dd>
+      </dl>
+    </div>
+    <div class="about-text reveal">
+      <p>システムエンジニアとして約2年、金融・工場システムのマイグレーション案件などに従事。Java・SQL・PowerShell・VBAでの開発、要件定義から設計・実装・テストまでの一貫した経験を積む。</p>
+      <p>並行して約6年、Adobe Premiereでの動画編集を継続。現在はこの2つを掛け合わせ、<span class="highlight">Python×AIによるコンテンツ制作の完全自動化パイプライン</span>や、<span class="highlight">画像認識AIを使った業務システム</span>の開発を軸に活動している。</p>
+      <p>屋号「M&Y」には、「まだ誰も解いていない課題（Yet）を、現代の技術（Modern）で解く」という意味を込めている。</p>
+    </div>
+  </div>
+</section>
+
+<section id="strengths">
+  <p class="sec-label reveal">02 — STRENGTHS</p>
+  <h2 class="sec-title reveal">STRENGTHS</h2>
+  <p class="sec-sub reveal">得意なこと</p>
+  <div class="works-grid">
+    <div class="work-card reveal">
+      <p class="tag">RESEARCH</p>
+      <h3>情報収集 × 試行錯誤</h3>
+      <p>新しい技術や情報を素早くキャッチアップし、実際に手を動かして検証する。インプットと検証のサイクルが速い。</p>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">UNDERSTANDING</p>
+      <h3>根本理解による応用力</h3>
+      <p>表面的な使い方ではなく仕組みから理解するため、学んだことを別の分野・課題にも転用できる。</p>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">END-TO-END</p>
+      <h3>一気通貫の開発力</h3>
+      <p>要件定義から設計・実装・テスト、提案書や仕様書の作成まで、企画から完成までを一人で完結できる。</p>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">AI &amp; AUTOMATION</p>
+      <h3>AI×自動化の実装力</h3>
+      <p>AIを「試す」だけでなく、実際に動くシステムに落とし込む。人が寝ていても回り続ける、手離れの良い仕組みを設計する。</p>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">HYBRID</p>
+      <h3>技術 × クリエイティブ</h3>
+      <p>エンジニアリングと動画編集6年の両方の視点を持つ。コンテンツ制作の自動化は、この掛け合わせから生まれる。</p>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">PERSISTENCE</p>
+      <h3>完遂力・継続力</h3>
+      <p>642本のコンテンツキューを組み、6年間編集を続ける。決めた物量を最後までやり切る。</p>
+    </div>
+  </div>
+</section>
+
+<section id="career">
+  <p class="sec-label reveal">03 — CAREER</p>
+  <h2 class="sec-title reveal">SE EXPERIENCE</h2>
+  <p class="sec-sub reveal">システムエンジニアとしての実務経歴</p>
+  <div class="timeline">
+    <div class="tl-item reveal">
+      <p class="period">2023.08 — 2023.11</p>
+      <h3>金融システムのマイグレーション</h3>
+      <p class="env">Windows10→11 / VBA・VB.NET・CSS / GitHub・WinSCP</p>
+      <p>OSアップデートに伴う金融システムの移行。テスト・本番環境の構築、仕様書に基づくプログラム修正、テストケース作成、単体・結合試験を担当。</p>
+    </div>
+    <div class="tl-item reveal">
+      <p class="period">2022.07 — 2023.07</p>
+      <h3>工場システムのマイグレーション</h3>
+      <p class="env">Windows10 / Java・MySQL・PowerShell・VBA / Subversion</p>
+      <p>データ変換・照合、DB管理に加え、稼働時間集計ツール（VBA）や棚卸ツール（PowerShell）を要件定義から設計・開発・テストまで一貫して自作。</p>
+    </div>
+    <div class="tl-item reveal">
+      <p class="period">2022.05 — 2023.06</p>
+      <h3>図書館システムの作成</h3>
+      <p class="env">Windows10 / Java</p>
+      <p>基本設計・詳細設計から実装・テストまで、開発工程を一通り経験。</p>
+    </div>
+  </div>
+</section>
+
+<section id="works">
+  <p class="sec-label reveal">04 — WORKS</p>
+  <h2 class="sec-title reveal">AI &amp; AUTOMATION</h2>
+  <p class="sec-sub reveal">AI・自動化を活用した制作実績</p>
+  <div class="works-grid">
+    <div class="work-card wide reveal">
+      <p class="tag">BUSINESS SYSTEM</p>
+      <h3>ParkingAI — 駐車場AI管理システム</h3>
+      <p>画像認識AIで駐車場の車両を検知・ナンバー読取し、入出庫を自動管理するシステム。検知からDB記録、API提供までをフルスタックで開発。提案書・仕様書・OEM資料・セットアップガイドまで整備し、事業譲渡パッケージとして完成。</p>
+      <div class="stack"><span>Python</span><span>OpenCV</span><span>YOLOv8</span><span>PaddleOCR</span><span>FastAPI</span><span>SQLite</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">CONTENT PIPELINE</p>
+      <h3>コミックナレーター</h3>
+      <p>人気漫画のあらすじを1巻ずつ解説する、ながら聞き特化のYouTubeチャンネル。台本生成から音声合成、字幕、動画合成、サムネ生成、予約投稿までを完全自動化。3時間ごとの自動実行で642本分のコンテンツを展開。</p>
+      <div class="stack"><span>Claude API</span><span>VOICEVOX</span><span>Pexels API</span><span>ffmpeg</span><span>Pillow</span><span>YouTube Data API</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">CONTENT PIPELINE <span class="status">SYSTEM ONLY</span></p>
+      <h3>ビタミィ（Vitamii）</h3>
+      <p>美容・栄養成分に特化したショート動画の自動生成パイプライン。SVGキャラクターと音声合成を組み合わせ、TikTok/Instagram/X向けに287件の成分データから動画を量産できるシステムを構築（チャンネル運用は未実施）。</p>
+      <div class="stack"><span>Python</span><span>moviepy</span><span>VOICEVOX</span><span>SVG</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">CONTENT PIPELINE</p>
+      <h3>ゲーム攻略ブログ 自動投稿システム</h3>
+      <p>AIによる記事生成からブログ投稿までを自動化したゲーム攻略メディア。「七つの大罪Origin」を中心に運営。</p>
+      <div class="stack"><span>Claude API</span><span>ffmpeg</span><span>はてなAtomPub API</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">AI TOOL</p>
+      <h3>笑い検出ツール</h3>
+      <p>VTuber切り抜き動画制作のため、配信アーカイブから「笑いどころ」を自動抽出するツール。音声認識と音量スパイク検出を併用。</p>
+      <div class="stack"><span>Python</span><span>Whisper</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">CHANNEL MANAGEMENT</p>
+      <h3>YouTubeチャンネル運用代行</h3>
+      <p>YouTube/TikTokのクリップ管理、企画構成案の作成、アナリティクス分析まで、チャンネル運営を総合的にサポート。</p>
+      <div class="stack"><span>YouTube</span><span>TikTok</span><span>Analytics</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">GAME <span class="status">IN PROGRESS</span></p>
+      <h3>Ancient Ruins Explorer</h3>
+      <p>Godotエンジンで開発中の放置・クリッカー系モバイルゲーム。</p>
+      <div class="stack"><span>Godot</span></div>
+    </div>
+    <div class="work-card reveal">
+      <p class="tag">MUSIC</p>
+      <h3>Ann-Iris</h3>
+      <p>アーティスト名「Ann-Iris」として楽曲を制作、TuneCore経由で各配信サービスにリリース。自作パイプラインのBGMとしても使用。</p>
+      <div class="stack"><span>TuneCore</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <p class="sec-label reveal">05 — SKILLS</p>
+  <h2 class="sec-title reveal">TECH STACK</h2>
+  <p class="sec-sub reveal">扱える技術</p>
+  <div class="skill-cols">
+    <div class="reveal">
+      <h3>LANGUAGES</h3>
+      <ul><li>Python</li><li>Java</li><li>SQL</li><li>PowerShell</li><li>VBA / VB.NET</li></ul>
+    </div>
+    <div class="reveal">
+      <h3>AI / AUTOMATION</h3>
+      <ul><li>Claude API</li><li>OpenCV / YOLOv8</li><li>PaddleOCR / Whisper</li><li>VOICEVOX</li><li>FastAPI</li></ul>
+    </div>
+    <div class="reveal">
+      <h3>CREATIVE</h3>
+      <ul><li>Adobe Premiere（6年）</li><li>ffmpeg / moviepy</li><li>Pillow</li><li>YouTube / TikTok運用</li><li>音楽制作</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <p class="sec-label reveal">06 — CONTACT</p>
+  <h2 class="sec-title reveal">GET IN TOUCH</h2>
+  <p class="sec-sub reveal">開発・自動化・動画編集・ライティング etc. のご依頼</p>
+  <a class="mail reveal" href="mailto:kmmy.lache@gmail.com">kmmy.lache@gmail.com</a>
+  <p class="note reveal">お仕事のご依頼・お問い合わせはお気軽にご連絡ください。</p>
+</section>
+
+<footer>© 2026 YUTO MATSUO / M&amp;Y. ALL RIGHTS RESERVED.</footer>
+
+<script>
+// typing effect
+const lines=['python run_pipeline.py --auto','solving unsolved problems with modern tech','building AI content pipelines...'];
+const typeEl=document.getElementById('type');
+let li=0,ci=0,del=false;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduced){typeEl.textContent=lines[0];}
+else{
+  (function tick(){
+    const cur=lines[li];
+    typeEl.textContent=cur.slice(0,ci);
+    if(!del){ci++;if(ci>cur.length){del=true;setTimeout(tick,2200);return}}
+    else{ci--;if(ci===0){del=false;li=(li+1)%lines.length}}
+    setTimeout(tick,del?28:70);
+  })();
+}
+
+// marquee duplicate
+const mq=document.getElementById('mq');
+mq.innerHTML+=mq.innerHTML;
+
+// scroll reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// network particles background
+const cv=document.getElementById('net'),ctx=cv.getContext('2d');
+let W,H,pts=[];
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;
+  const n=Math.min(70,Math.floor(W*H/22000));
+  pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35}));
+}
+resize();addEventListener('resize',resize);
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of pts){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.fillStyle='rgba(94,234,212,.5)';
+    ctx.fillRect(p.x-1,p.y-1,2,2);
+  }
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;
+    if(d<130*130){
+      ctx.strokeStyle=`rgba(96,165,250,${.12*(1-d/(130*130))})`;
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+    }
+  }
+  if(!reduced)requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
